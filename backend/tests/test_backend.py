@@ -105,3 +105,32 @@ def test_financial_sample_statements(client):
     assert data['status'] == 'success'
     assert any(s['id'] == 'synthetic_12_month_statement.csv' for s in data['samples'])
 
+def test_datasets_overview_and_records(client):
+    """Test integrated datasets overview endpoint and pagination."""
+    res = client.get('/api/datasets/overview')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['status'] == 'success'
+    assert data['overview']['total_records_all_datasets'] >= 80000
+    assert data['overview']['smishing_dataset']['total_records'] == 84863
+    assert data['overview']['scam_features_dataset']['total_records'] == 5971
+
+    # Query smishing records
+    smish_res = client.get('/api/datasets/smishing?page=1&per_page=10&label=smishing')
+    assert smish_res.status_code == 200
+    smish_data = smish_res.get_json()
+    assert smish_data['status'] == 'success'
+    assert len(smish_data['records']) == 10
+    assert all(r['is_smishing'] == 1 for r in smish_data['records'])
+
+    # Test test-message
+    test_res = client.post('/api/datasets/test-message', json={
+        'message': 'Dear SBI User, your NetBanking is suspended. Verify at http://sbi-verify.top immediately.'
+    })
+    assert test_res.status_code == 200
+    test_data = test_res.get_json()
+    assert test_data['status'] == 'success'
+    assert test_data['result']['risk_score'] >= 50
+    assert 'signal_features' in test_data['result']
+
+

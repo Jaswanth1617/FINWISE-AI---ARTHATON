@@ -16,7 +16,8 @@ import {
   UserCircle, 
   Settings,
   ShieldCheck,
-  Sparkles
+  Sparkles,
+  Database
 } from 'lucide-react';
 
 const NAV_SECTIONS = [
@@ -32,6 +33,7 @@ const NAV_SECTIONS = [
     title: 'Intelligence & Protection',
     items: [
       { name: 'Fraud Detection', path: '/fraud-detection', icon: ShieldAlert, badge: 'Guard' },
+      { name: 'Research Datasets', path: '/datasets', icon: Database, badge: '84k SMS' },
       { name: 'Smart Budgeting', path: '/budgeting', icon: PieChart },
       { name: 'Loan & EMI Assistant', path: '/loans', icon: Calculator },
       { name: 'Investments', path: '/investments', icon: TrendingUp },

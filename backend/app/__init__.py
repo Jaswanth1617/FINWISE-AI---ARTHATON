@@ -30,6 +30,7 @@ def create_app(config_name=None):
     from app.routes.news_routes import news_bp
     from app.routes.assistant_routes import assistant_bp
     from app.routes.report_routes import report_bp
+    from app.routes.dataset_routes import dataset_bp
 
     flask_app.register_blueprint(auth_bp)
     flask_app.register_blueprint(dashboard_bp)
@@ -43,6 +44,7 @@ def create_app(config_name=None):
     flask_app.register_blueprint(news_bp)
     flask_app.register_blueprint(assistant_bp)
     flask_app.register_blueprint(report_bp)
+    flask_app.register_blueprint(dataset_bp)
 
     # Health check route
     @flask_app.route('/api/health', methods=['GET'])
