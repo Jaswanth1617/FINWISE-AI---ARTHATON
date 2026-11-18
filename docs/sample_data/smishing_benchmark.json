@@ -1,0 +1,50 @@
+[
+  {
+    "category": "Banking & KYC Suspension",
+    "title": "SBI Account Suspension Warning",
+    "sender": "AX-SBIINB-ALERT",
+    "text": "Dear SBI User, your NetBanking account has been suspended due to pending PAN-Aadhaar KYC. Please click http://sbi-netbanking-verify.top/update to prevent permanent deactivation."
+  },
+  {
+    "category": "Banking & KYC Suspension",
+    "title": "HDFC Card Block Notice",
+    "sender": "VM-HDFCBK",
+    "text": "Your HDFC credit card ending 4012 is temporarily blocked. Verify immediately using link: http://hdfc-bank-verify.xyz/auth or call +919876543210."
+  },
+  {
+    "category": "Cashback & UPI Prize",
+    "title": "PhonePe Cashback Claim",
+    "sender": "PHONEPE-REWARDS",
+    "text": "Congratulations! You have won \u20b925,000 cash reward from PhonePe Rewards. Click here to claim into your account: http://tinyurl.com/claim-reward-upi and enter your 6-digit UPI PIN."
+  },
+  {
+    "category": "Cashback & UPI Prize",
+    "title": "GPay Scratch Card Incentive",
+    "sender": "GPAY-OFFER",
+    "text": "You have 1 unclaimed cashback reward of Rs 4,999 from Google Pay. Claim now by visiting http://bit.ly/gpay-cash-reward before it expires today."
+  },
+  {
+    "category": "Utility & Electricity Cutoff",
+    "title": "Electricity Power Disconnection Alert",
+    "sender": "BESCOM-OFFICIAL",
+    "text": "Dear Consumer, your electricity power connection will be disconnected tonight at 9:30 PM from the power sub-station because your previous bill was not updated. Please immediately contact our electricity officer at 9876543211."
+  },
+  {
+    "category": "Package & Delivery Phishing",
+    "title": "IndiaPost Undelivered Parcel Scam",
+    "sender": "IN-POST-NOTICE",
+    "text": "IndiaPost Alert: Your package consignment #IN8492041 cannot be delivered due to incomplete home address. Please update your address within 24 hours at http://indiapost-parcel-update.top to avoid return to sender."
+  },
+  {
+    "category": "Credit Alert & Refund Hook",
+    "title": "Fake High-Value Credit Alert (Smishing Dataset)",
+    "sender": "NGN-ALERT",
+    "text": "access>>>Credit Alert Amt: NGN 1,250,000.00 from CBN/FGN Treasury. Your payment has been approved. Dial *200# or visit http://cbn-fund-clearance.net to release funds."
+  },
+  {
+    "category": "OTP & Credential Interception",
+    "title": "Account Recovery Code Interception",
+    "sender": "VERIFY-AUTH",
+    "text": "Your WhatsApp / Banking security code is: 5398. If you did not request this, your account is compromised. Call support immediately or click http://secure-auth-shield.top/cancel."
+  }
+]

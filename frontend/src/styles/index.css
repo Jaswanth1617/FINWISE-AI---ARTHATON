@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-finwise-bg text-slate-800 antialiased font-sans selection:bg-indigo-100 selection:text-indigo-900;
+  }
+
+  /* Natural crisp form inputs */
+  input, select, textarea {
+    @apply transition-colors duration-150;
+  }
+}
+
+/* Subtle clean scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E2E8F0;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #CBD5E1;
+}
