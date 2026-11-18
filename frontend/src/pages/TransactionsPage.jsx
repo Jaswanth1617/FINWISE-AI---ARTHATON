@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../services/api';
 import LoadingSkeleton from '../components/common/LoadingSkeleton';
 import { 
@@ -12,7 +13,9 @@ import {
   X,
   CreditCard,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Upload,
+  Sparkles
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -98,17 +101,26 @@ export default function TransactionsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Financial Transactions Ledger</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Categorized accounting log with anomaly indicators</p>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Transactions & Activity</h1>
+          <p className="text-xs text-slate-500 mt-0.5">Your organized income, expenses, and safety-verified entries</p>
         </div>
 
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-1.5 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-lg shadow-xs transition-colors shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          Add Transaction
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            to="/analyser"
+            className="flex items-center gap-1.5 text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 px-3.5 py-2 rounded-xl shadow-xs transition-colors shrink-0"
+          >
+            <Upload className="w-4 h-4 text-indigo-600" />
+            Upload Statement
+          </Link>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-1.5 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-xl shadow-xs transition-colors shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+            Add Transaction
+          </button>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}
@@ -263,8 +275,25 @@ export default function TransactionsPage() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="8" className="py-12 text-center text-slate-400">
-                      No transactions match the selected filters.
+                    <td colSpan="8" className="py-12 text-center text-slate-500">
+                      <p className="font-bold text-slate-800 text-sm mb-1">No transactions found</p>
+                      <p className="text-xs text-slate-400 mb-4">You can add records manually or upload a bank statement to get started.</p>
+                      <div className="flex items-center justify-center gap-3">
+                        <Link
+                          to="/analyser"
+                          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs inline-flex items-center gap-1.5"
+                        >
+                          <Upload className="w-3.5 h-3.5" />
+                          Upload Statement
+                        </Link>
+                        <button
+                          onClick={() => setShowAddModal(true)}
+                          className="px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold rounded-xl inline-flex items-center gap-1.5"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          Add Transaction
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 )}

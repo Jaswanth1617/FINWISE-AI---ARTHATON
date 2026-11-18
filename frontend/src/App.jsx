@@ -21,6 +21,7 @@ import ReportsPage from './pages/ReportsPage';
 import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
 import DatasetsPage from './pages/DatasetsPage';
+import ToolsPage from './pages/ToolsPage';
 
 export default function App() {
   return (
@@ -38,6 +39,7 @@ export default function App() {
             <Route path="/analyser" element={<AnalyserPage />} />
             <Route path="/transactions" element={<TransactionsPage />} />
             <Route path="/fraud-detection" element={<FraudDetectionPage />} />
+            <Route path="/tools" element={<ToolsPage />} />
             <Route path="/datasets" element={<DatasetsPage />} />
             <Route path="/budgeting" element={<BudgetingPage />} />
             <Route path="/loans" element={<LoansPage />} />
