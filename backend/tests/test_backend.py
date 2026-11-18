@@ -24,8 +24,8 @@ def test_user_registration_and_login(client):
     """Test user registration, password hashing and JWT token issuance."""
     # Register
     reg_res = client.post('/api/auth/register', json={
-        'email': 'investor@finwise.ai',
-        'username': 'investor1',
+        'email': 'new_user@finwise.ai',
+        'username': 'new_user1',
         'password': 'SecurePassword123',
         'full_name': 'Aarav Sharma',
         'role': 'Individual'
@@ -34,11 +34,11 @@ def test_user_registration_and_login(client):
     data = reg_res.get_json()
     assert data['status'] == 'success'
     assert 'access_token' in data
-    assert data['user']['email'] == 'investor@finwise.ai'
+    assert data['user']['email'] == 'new_user@finwise.ai'
 
     # Login
     login_res = client.post('/api/auth/login', json={
-        'login': 'investor@finwise.ai',
+        'login': 'new_user@finwise.ai',
         'password': 'SecurePassword123'
     })
     assert login_res.status_code == 200
@@ -132,5 +132,29 @@ def test_datasets_overview_and_records(client):
     assert test_data['status'] == 'success'
     assert test_data['result']['risk_score'] >= 50
     assert 'signal_features' in test_data['result']
+
+def test_hardcoded_seeder(app):
+    """Test full hardcoded data seeding across all modules."""
+    from app.models.user import User
+    from app.models.transaction import Transaction
+    from app.models.loan import LoanRecord
+    from app.models.investment import InvestmentPortfolio
+    from app.models.business import Business, TaxCalculation
+    from app.models.budget import Budget
+    from app.models.fraud import FraudAnalysis
+    from app.utils.seeder import seed_default_demo_user
+
+    with app.app_context():
+        seed_default_demo_user()
+        demo = User.query.filter_by(email="investor@finwise.ai").first()
+        assert demo is not None
+        assert Transaction.query.filter_by(user_id=demo.id).count() >= 20
+        assert LoanRecord.query.filter_by(user_id=demo.id).count() >= 1
+        assert InvestmentPortfolio.query.filter_by(user_id=demo.id).count() >= 1
+        assert Business.query.filter_by(user_id=demo.id).count() >= 1
+        assert TaxCalculation.query.filter_by(user_id=demo.id).count() >= 1
+        assert Budget.query.filter_by(user_id=demo.id).count() >= 1
+        assert FraudAnalysis.query.filter_by(user_id=demo.id).count() >= 1
+
 
 

@@ -70,10 +70,12 @@ def create_app(config_name=None):
     def internal_server_error(e):
         return jsonify({'status': 'error', 'message': 'Internal financial processing error.'}), 500
 
-    # Auto-create tables in development mode if not present
+    # Auto-create tables in development mode if not present and seed default demo user
     with flask_app.app_context():
         try:
             db.create_all()
+            from app.utils.seeder import seed_default_demo_user
+            seed_default_demo_user()
         except Exception as e:
             print(f"Database initialization notice: {e}")
 

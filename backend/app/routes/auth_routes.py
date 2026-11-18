@@ -7,6 +7,7 @@ from app.models.transaction import FinancialAccount, Transaction
 from app.models.budget import Budget, BudgetCategory
 from app.utils.validators import validate_email, validate_password_strength
 from app.utils.security import log_audit_event
+from app.utils.seeder import seed_hardcoded_user_data
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
@@ -52,6 +53,12 @@ def register():
     db.session.add(profile)
     db.session.commit()
 
+    # Pre-populate complete hardcoded data for the user
+    try:
+        seed_hardcoded_user_data(user.id)
+    except Exception as e:
+        print(f"Notice during user seeding: {e}")
+
     log_audit_event(user.id, 'USER_REGISTERED', 'User', user.id, f"Role: {role}")
 
     # Generate JWT
@@ -88,6 +95,13 @@ def login():
     refresh_token = create_refresh_token(identity=user.id, additional_claims=token_claims)
 
     log_audit_event(user.id, 'USER_LOGIN', 'User', user.id)
+
+    # Ensure user has complete realistic hardcoded data if empty
+    try:
+        if Transaction.query.filter_by(user_id=user.id).count() == 0:
+            seed_hardcoded_user_data(user.id)
+    except Exception as e:
+        print(f"Notice during login data priming: {e}")
 
     return jsonify({
         'status': 'success',
@@ -142,7 +156,7 @@ def profile():
 @jwt_required()
 def seed_demo_data():
     """
-    Populate realistic demo transactions, accounts, and budgets for hackathon presentation.
+    Populate realistic demo transactions, accounts, budgets, loans, and investments across all 9 modules.
     All records explicitly tagged with is_demo=True.
     """
     user_id = get_jwt_identity()
@@ -150,88 +164,10 @@ def seed_demo_data():
     if not user:
         return jsonify({'status': 'error', 'message': 'User not found.'}), 404
 
-    # Create account if missing
-    account = FinancialAccount.query.filter_by(user_id=user_id).first()
-    if not account:
-        account = FinancialAccount(
-            user_id=user_id,
-            account_name="Primary Savings Account",
-            institution_name="HDFC Bank",
-            account_mask="XXXX7812",
-            current_balance=84250.00
-        )
-        db.session.add(account)
-        db.session.flush()
-
-    # Clear existing demo transactions to avoid repeats
-    Transaction.query.filter_by(user_id=user_id, is_demo=True).delete()
-
-    today = date.today()
-    y = today.year
-    m = today.month
-
-    sample_txs = [
-        (date(y, m, max(1, min(1, 28))), "Salary Credit - TechCorp Solutions", "Salary", "CREDIT", 75000.00, 115000.00, False, None),
-        (date(y, m, max(1, min(2, 28))), "House Rent Transfer - Landlord", "Rent", "DEBIT", 20000.00, 95000.00, False, None),
-        (date(y, m, max(1, min(3, 28))), "Swiggy Online Food Order", "Food", "DEBIT", 640.00, 94360.00, False, None),
-        (date(y, m, max(1, min(4, 28))), "Uber Bangalore Ride", "Transportation", "DEBIT", 420.00, 93940.00, False, None),
-        (date(y, m, max(1, min(5, 28))), "Amazon India Electronics Purchase", "Shopping", "DEBIT", 3499.00, 90441.00, False, None),
-        (date(y, m, max(1, min(7, 28))), "Zomato Dineout Meal", "Food", "DEBIT", 1250.00, 89191.00, False, None),
-        (date(y, m, max(1, min(8, 28))), "Bescom Electricity Bill Payment", "Bills", "DEBIT", 1850.00, 87341.00, False, None),
-        (date(y, m, max(1, min(10, 28))), "HDFC Home Loan EMI AutoDebit", "EMI", "DEBIT", 18500.00, 68841.00, False, None),
-        (date(y, m, max(1, min(12, 28))), "Zerodha SIP Equity Investment", "Investments", "DEBIT", 10000.00, 58841.00, False, None),
-        (date(y, m, max(1, min(14, 28))), "Apollo Pharmacy Medicine", "Healthcare", "DEBIT", 890.00, 57951.00, False, None),
-        (date(y, m, max(1, min(15, 28))), "Netflix Monthly Subscription", "Entertainment", "DEBIT", 649.00, 57302.00, False, None),
-        (date(y, m, max(1, min(16, 28))), "Unusual High Debit - Card Withdrawal International ATM", "Other", "DEBIT", 45000.00, 12302.00, True, "Statistical outlier: 6.8x higher than average debit"),
-        (date(y, m, max(1, min(17, 28))), "Swiggy Online Food Order Duplicate", "Food", "DEBIT", 640.00, 11662.00, True, "Potential duplicate transaction detected on same merchant"),
-    ]
-
-    for tx_date, desc, cat, tx_type, amt, bal, susp, susp_reason in sample_txs:
-        tx = Transaction(
-            user_id=user_id,
-            account_id=account.id,
-            transaction_date=tx_date,
-            description=desc,
-            normalized_description=desc,
-            category=cat,
-            transaction_type=tx_type,
-            amount=amt,
-            balance_after=bal,
-            is_suspicious=susp,
-            suspicion_reason=susp_reason,
-            is_demo=True
-        )
-        db.session.add(tx)
-
-    # Seed demo budget for current month
-    existing_budget = Budget.query.filter_by(user_id=user_id, month=m, year=y).first()
-    if not existing_budget:
-        b = Budget(
-            user_id=user_id,
-            month=m,
-            year=y,
-            total_income=75000.0,
-            total_budgeted=54000.0,
-            savings_target=21000.0,
-            notes=f"Active Demo Budget ({m}/{y})"
-        )
-        db.session.add(b)
-        db.session.flush()
-
-        cats = [
-            ("Food", 8000.0),
-            ("Rent", 20000.0),
-            ("Shopping", 5000.0),
-            ("Bills", 3000.0),
-            ("EMI", 18500.0)
-        ]
-        for cname, alloc in cats:
-            db.session.add(BudgetCategory(budget_id=b.id, category_name=cname, allocated_amount=alloc))
-
-    db.session.commit()
+    seed_hardcoded_user_data(user_id)
     log_audit_event(user_id, 'DEMO_DATA_SEEDED', 'User', user_id)
 
     return jsonify({
         'status': 'success',
-        'message': 'Realistic demonstration financial dataset seeded successfully.'
+        'message': 'Comprehensive realistic fintech dataset seeded successfully across all modules.'
     }), 200
