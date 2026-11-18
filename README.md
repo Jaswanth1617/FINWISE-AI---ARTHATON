@@ -26,6 +26,7 @@ Unlike static mockups or superficial dashboards, FINWISE AI is an end-to-end, fu
 8. **Financial News Intelligence** – Macroeconomic dispatches with sentiment scoring and sectoral impact classification.
 9. **FINWISE Assistant** – Context-grounded AI copilot answering natural-language queries about your real spending, loans, and budgets.
 10. **Institutional Reports** – 1-Click generation of audit-grade PDF reports (built with ReportLab) and CSV exports.
+11. **Research Datasets & Benchmark Explorer** – Interactive explorer for 84,863 SMS Smishing Corpus, INFO-4360 Scam Features, and 12-Month Banking Transactions with live AI threat testing and raw CSV downloads.
 
 ---
 
