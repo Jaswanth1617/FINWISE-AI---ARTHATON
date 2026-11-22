@@ -156,5 +156,56 @@ def test_hardcoded_seeder(app):
         assert Budget.query.filter_by(user_id=demo.id).count() >= 1
         assert FraudAnalysis.query.filter_by(user_id=demo.id).count() >= 1
 
+def test_report_generation_and_download(client):
+    """Test generating and downloading reports via Bearer token and query param token."""
+    # 1. Register test user
+    reg = client.post('/api/auth/register', json={
+        'email': 'report_tester@finwise.ai',
+        'username': 'report_tester',
+        'password': 'SecurePassword123',
+        'full_name': 'Report Auditor',
+        'role': 'Individual'
+    })
+    assert reg.status_code == 201
+    token = reg.get_json()['access_token']
+    auth_headers = {'Authorization': f'Bearer {token}'}
+
+    # 2. Generate PDF report
+    gen_pdf = client.post('/api/reports/generate', headers=auth_headers, json={
+        'report_type': 'EXPENSE_ANALYSIS',
+        'file_format': 'PDF'
+    })
+    assert gen_pdf.status_code == 201
+    pdf_report = gen_pdf.get_json()['report']
+    pdf_id = pdf_report['id']
+
+    # 3. Download with Bearer Authorization header
+    dl_pdf_bearer = client.get(f'/api/reports/download/{pdf_id}', headers=auth_headers)
+    assert dl_pdf_bearer.status_code == 200
+    assert len(dl_pdf_bearer.data) > 0
+    assert dl_pdf_bearer.mimetype == 'application/pdf'
+
+    # 4. Download with ?token= query parameter (fallback/direct link)
+    dl_pdf_query = client.get(f'/api/reports/download/{pdf_id}?token={token}')
+    assert dl_pdf_query.status_code == 200
+    assert len(dl_pdf_query.data) > 0
+
+    # 5. Unauthorized download without token
+    dl_unauth = client.get(f'/api/reports/download/{pdf_id}')
+    assert dl_unauth.status_code == 401
+
+    # 6. Generate and download CSV report
+    gen_csv = client.post('/api/reports/generate', headers=auth_headers, json={
+        'report_type': 'MONTHLY_FINANCIAL',
+        'file_format': 'CSV'
+    })
+    assert gen_csv.status_code == 201
+    csv_id = gen_csv.get_json()['report']['id']
+
+    dl_csv = client.get(f'/api/reports/download/{csv_id}', headers=auth_headers)
+    assert dl_csv.status_code == 200
+    assert dl_csv.mimetype == 'text/csv'
+
+
 
 

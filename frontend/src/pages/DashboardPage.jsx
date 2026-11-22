@@ -9,7 +9,6 @@ import {
   Wallet, 
   PiggyBank, 
   ShieldAlert, 
-  Upload, 
   Sparkles, 
   ChevronRight, 
   TrendingUp, 
@@ -113,15 +112,15 @@ export default function DashboardPage() {
       {/* Quick Friendly Action Shortcuts */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Link
-          to="/analyser"
+          to="/transactions"
           className="p-3.5 bg-white border border-slate-200/90 rounded-2xl shadow-xs hover:border-indigo-300 hover:shadow-sm transition-all flex items-center gap-3 group"
         >
           <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-            <Upload className="w-5 h-5" />
+            <ReceiptText className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">Upload Statement</h4>
-            <p className="text-[11px] text-slate-500">PDF, CSV or Excel</p>
+            <h4 className="text-xs font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">Transactions Ledger</h4>
+            <p className="text-[11px] text-slate-500">Income & Expenses</p>
           </div>
         </Link>
 
@@ -175,15 +174,15 @@ export default function DashboardPage() {
             <div>
               <h3 className="text-sm font-bold text-slate-900">Welcome to FINWISE AI!</h3>
               <p className="text-xs text-slate-600 mt-0.5">
-                Your account is fresh. Click <strong>"Load Demo Data"</strong> in the top header or upload a bank statement to populate live charts.
+                Your account is fresh. Click <strong>"Load Demo Data"</strong> in the top header or add transactions to populate live charts.
               </p>
             </div>
           </div>
           <Link
-            to="/analyser"
+            to="/transactions"
             className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-colors shrink-0 shadow-xs"
           >
-            Upload Statement
+            View Transactions
           </Link>
         </div>
       )}
@@ -417,7 +416,7 @@ export default function DashboardPage() {
             </div>
 
             <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-line font-medium">
-              {data?.ai_insights || "Upload statements or load demo data to receive automated spending velocity warnings and savings optimizations."}
+              {data?.ai_insights || "Record transactions or load demo data to receive automated spending velocity warnings and savings optimizations."}
             </p>
 
             <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">

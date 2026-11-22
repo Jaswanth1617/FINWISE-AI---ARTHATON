@@ -14,7 +14,6 @@ import {
   CreditCard,
   ArrowUpRight,
   ArrowDownRight,
-  Upload,
   Sparkles
 } from 'lucide-react';
 
@@ -106,13 +105,6 @@ export default function TransactionsPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Link
-            to="/analyser"
-            className="flex items-center gap-1.5 text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 px-3.5 py-2 rounded-xl shadow-xs transition-colors shrink-0"
-          >
-            <Upload className="w-4 h-4 text-indigo-600" />
-            Upload Statement
-          </Link>
           <button
             onClick={() => setShowAddModal(true)}
             className="flex items-center gap-1.5 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-xl shadow-xs transition-colors shrink-0"
@@ -277,18 +269,11 @@ export default function TransactionsPage() {
                   <tr>
                     <td colSpan="8" className="py-12 text-center text-slate-500">
                       <p className="font-bold text-slate-800 text-sm mb-1">No transactions found</p>
-                      <p className="text-xs text-slate-400 mb-4">You can add records manually or upload a bank statement to get started.</p>
+                      <p className="text-xs text-slate-400 mb-4">You can add records manually or click "Load Demo Data" in the top bar to get started.</p>
                       <div className="flex items-center justify-center gap-3">
-                        <Link
-                          to="/analyser"
-                          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs inline-flex items-center gap-1.5"
-                        >
-                          <Upload className="w-3.5 h-3.5" />
-                          Upload Statement
-                        </Link>
                         <button
                           onClick={() => setShowAddModal(true)}
-                          className="px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold rounded-xl inline-flex items-center gap-1.5"
+                          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-xs inline-flex items-center gap-1.5"
                         >
                           <Plus className="w-3.5 h-3.5" />
                           Add Transaction

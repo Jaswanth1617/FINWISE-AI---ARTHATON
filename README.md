@@ -16,7 +16,7 @@ Unlike static mockups or superficial dashboards, FINWISE AI is an end-to-end, fu
 
 ## 🌟 Core Platform Modules
 
-1. **AI Financial Data Analyser** – Native parsing of PDF statements via PyMuPDF, CSV, and Excel spreadsheets with automatic categorization and duplicate prevention.
+1. **AI Transactions Ledger & Categorization** – Unified income and expense management with automatic 13-category classification and duplicate prevention.
 2. **AI Fraud Detection Centre** – Heuristic and LLM risk scoring (0–100) for bank SMS, UPI cashback lures, and passive URL inspection.
 3. **Smart Budgeting** – Category spending caps, utilization velocity tracking, threshold alerts, and month-end run-rate forecasts.
 4. **Loan & EMI Assistant** – Reducing-balance formula amortizations, prepayment accelerator savings calculator, and credit underwriting guidance.
@@ -77,8 +77,7 @@ The entire platform can be tested without needing a real bank account:
 
 1. **Step 1: Sign Up / Sign In** – Navigate to `http://localhost:3000`. Click **Explore Live Demo** or **1-Click Demo** on the login page.
 2. **Step 2: Seed Demo Financials** – Click the **"Load Demo Data"** button in the top navigation bar to populate realistic sample transactions, loan commitments, and category budgets.
-3. **Step 3: Open Financial Analyser** – Go to **Statement Analyser**. Upload `docs/sample_data/sample_bank_statement.csv` or `sample_bank_statement.pdf`. Observe automated date, amount, and category extraction.
-4. **Step 4: Review Ledger** – Go to **Transactions** to view debits, credits, category badges, and flagged outlier transactions.
+3. **Step 3: Review Ledger & Activity** – Go to **Transactions** to view organized debits, credits, category badges, and flagged outlier transactions. Add custom records anytime via the **"Add Transaction"** dialog.
 5. **Step 5: Test AI Fraud Detection** – Open **Fraud Detection**. Select the **"KYC Suspension Alert"** sample or paste a phishing SMS. Watch the engine calculate an 85/100 Critical Risk score with pattern indicators and AI explanation.
 6. **Step 6: Inspect Suspicious URL** – Switch to the **URL Inspector** tab. Click **"Spoofed Bank Domain"** (`http://hdfc-bank-netbanking-verify.xyz/auth`). Notice how the engine inspects domain structure passively without navigating to the URL.
 7. **Step 7: Smart Budgeting** – Visit **Smart Budgeting** to review category utilization bars, 80% threshold warnings, and month-end spending velocity projections.
@@ -108,7 +107,7 @@ FINWISE AI directly integrates and builds upon three established open-source and
 2. **Personal Finance Intelligence Corpus (12-Month Indian Banking Data)**:
    - High-fidelity synthetic dataset containing 2,393 authentic Indian transactions over 12 months with realistic running balances.
    - Comprehensive **UPI / NEFT / IMPS / BBPS / POS** transaction narration normalizer and merchant dictionary mapping entities like `Blinkit`, `D-Mart`, `Zepto`, `Swiggy`, `Bescom`, `Netflix`, `Groww SIP`, and `Rent`.
-   - 1-Click instant parsing in the **Financial Statement Analyser** with automatic anomaly detection and idempotent duplicate prevention.
+   - Integrated in the **Research Datasets Explorer** and Ledger with automatic anomaly detection and idempotent duplicate prevention.
 
 3. **Scam Text Signal Feature Engineering (INFO-4360 Project)**:
    - Multi-feature extraction pipeline extracting lexical and structural markers before LLM explanation:

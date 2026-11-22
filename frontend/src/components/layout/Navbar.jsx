@@ -14,7 +14,6 @@ import {
 
 const ROUTE_NAMES = {
   '/dashboard': 'Dashboard Overview',
-  '/analyser': 'Statement Analyser',
   '/transactions': 'Transactions Ledger',
   '/fraud-detection': 'Scam & Fraud Shield',
   '/budgeting': 'Smart Budgets',

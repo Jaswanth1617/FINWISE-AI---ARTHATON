@@ -8,7 +8,6 @@ import {
   Calculator, 
   Bot, 
   FileText, 
-  UploadCloud, 
   Database, 
   Newspaper, 
   UserCircle, 
@@ -33,7 +32,6 @@ const MAIN_NAV = [
 ];
 
 const MORE_TOOLS = [
-  { name: 'Statement Analyser', path: '/analyser', icon: UploadCloud },
   { name: 'Loan & EMI Assistant', path: '/loans', icon: Calculator },
   { name: 'Income Tax Estimator', path: '/tax', icon: FileSpreadsheet },
   { name: 'Investment Wealth', path: '/investments', icon: TrendingUp },

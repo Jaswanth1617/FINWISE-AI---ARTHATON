@@ -28,6 +28,7 @@ export default function ReportsPage() {
   const [selectedType, setSelectedType] = useState('MONTHLY_FINANCIAL');
   const [fileFormat, setFileFormat] = useState('PDF');
   const [lastGenerated, setLastGenerated] = useState(null);
+  const [downloadingId, setDownloadingId] = useState(null);
 
   const fetchReports = async () => {
     try {
@@ -57,8 +58,43 @@ export default function ReportsPage() {
     }
   };
 
-  const handleDownload = (reportId) => {
-    window.open(`/api/reports/download/${reportId}`, '_blank');
+  const handleDownload = async (report) => {
+    if (!report || !report.id) return;
+    try {
+      setDownloadingId(report.id);
+      
+      // Perform authenticated GET with blob responseType
+      const res = await api.get(`/reports/download/${report.id}`, {
+        responseType: 'blob'
+      });
+
+      const ext = (report.file_format || 'PDF').toLowerCase();
+      const sanitizedTitle = (report.report_title || 'FINWISE_Financial_Report').replace(/[^a-zA-Z0-9_-]/g, '_');
+      const filename = `${sanitizedTitle}.${ext}`;
+
+      const mimeType = report.file_format === 'PDF' ? 'application/pdf' : 'text/csv';
+      const blob = new Blob([res.data], { type: mimeType });
+      const url = window.URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Authenticated blob download error, trying direct token fallback:", err);
+      // Fallback: Use token in query parameter if available
+      const token = localStorage.getItem('finwise_token');
+      if (token) {
+        window.open(`/api/reports/download/${report.id}?token=${encodeURIComponent(token)}`, '_blank');
+      } else {
+        alert("Failed to download report: " + (err.response?.data?.message || err.message));
+      }
+    } finally {
+      setDownloadingId(null);
+    }
   };
 
   useEffect(() => {
@@ -108,6 +144,56 @@ export default function ReportsPage() {
           </div>
         </div>
       </div>
+
+      {/* Instant Download Banner for Recently Generated Report */}
+      {lastGenerated && (
+        <div className="bg-emerald-50 border border-emerald-200/90 rounded-2xl p-5 shadow-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-emerald-100/80 rounded-xl text-emerald-700 shrink-0 mt-0.5">
+              <CheckCircle2 className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold text-emerald-800 uppercase bg-emerald-200/60 px-2 py-0.5 rounded">
+                  Compilation Ready
+                </span>
+                <span className="text-xs text-slate-500 font-medium">
+                  {(lastGenerated.file_size_bytes / 1024).toFixed(1)} KB • {lastGenerated.file_format}
+                </span>
+              </div>
+              <h4 className="text-sm font-bold text-slate-900 mt-1">{lastGenerated.report_title}</h4>
+              <p className="text-xs text-slate-600 mt-0.5">
+                Your report has been compiled and saved to your account archive. Click below to download.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+            <button
+              onClick={() => handleDownload(lastGenerated)}
+              disabled={downloadingId === lastGenerated.id}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-2xs transition-all disabled:opacity-50"
+            >
+              {downloadingId === lastGenerated.id ? (
+                <>
+                  <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Downloading...
+                </>
+              ) : (
+                <>
+                  <Download className="w-3.5 h-3.5" />
+                  Download Now
+                </>
+              )}
+            </button>
+            <button
+              onClick={() => setLastGenerated(null)}
+              className="px-3 py-2 text-slate-500 hover:text-slate-700 text-xs font-semibold rounded-lg hover:bg-emerald-100/50 transition-colors"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Report Template Selector Grid */}
       <div>
@@ -183,11 +269,22 @@ export default function ReportsPage() {
                     </td>
                     <td className="py-3 px-4 text-center">
                       <button
-                        onClick={() => handleDownload(r.id)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200/80 rounded-md font-semibold text-xs transition-colors"
+                        onClick={() => handleDownload(r)}
+                        disabled={downloadingId === r.id}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200/80 rounded-md font-semibold text-xs transition-colors disabled:opacity-50"
+                        title={`Download ${r.file_format}`}
                       >
-                        <Download className="w-3.5 h-3.5" />
-                        Download
+                        {downloadingId === r.id ? (
+                          <>
+                            <span className="w-3.5 h-3.5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+                            <span>Downloading...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Download className="w-3.5 h-3.5" />
+                            <span>Download</span>
+                          </>
+                        )}
                       </button>
                     </td>
                   </tr>

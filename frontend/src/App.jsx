@@ -7,7 +7,6 @@ import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
-import AnalyserPage from './pages/AnalyserPage';
 import TransactionsPage from './pages/TransactionsPage';
 import FraudDetectionPage from './pages/FraudDetectionPage';
 import BudgetingPage from './pages/BudgetingPage';
@@ -36,7 +35,7 @@ export default function App() {
           {/* Protected Application Routes */}
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/analyser" element={<AnalyserPage />} />
+            <Route path="/analyser" element={<Navigate to="/transactions" replace />} />
             <Route path="/transactions" element={<TransactionsPage />} />
             <Route path="/fraud-detection" element={<FraudDetectionPage />} />
             <Route path="/tools" element={<ToolsPage />} />

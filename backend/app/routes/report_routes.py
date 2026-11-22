@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, request, jsonify, current_app, send_file
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, decode_token
 from datetime import datetime, date
 from app.extensions import db
 from app.models.report import FinancialReport
@@ -163,19 +163,46 @@ def list_reports():
     }), 200
 
 @report_bp.route('/download/<string:report_id>', methods=['GET'])
-@jwt_required()
 def download_report(report_id):
-    user_id = get_jwt_identity()
+    # Support both Authorization: Bearer <token> and ?token= query parameter
+    auth_header = request.headers.get('Authorization')
+    token = None
+    if auth_header and auth_header.startswith('Bearer '):
+        token = auth_header.split(' ')[1]
+    elif request.args.get('token'):
+        token = request.args.get('token')
+
+    if not token:
+        return jsonify({'status': 'error', 'message': 'Missing authorization token.'}), 401
+
+    try:
+        decoded = decode_token(token)
+        user_id = decoded['sub']
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': 'Invalid or expired authorization token.'}), 401
+
     report = FinancialReport.query.filter_by(id=report_id, user_id=user_id).first()
-    if not report or not report.file_path or not os.path.exists(report.file_path):
-        return jsonify({'status': 'error', 'message': 'Report file not found or unauthorized.'}), 404
+    if not report:
+        return jsonify({'status': 'error', 'message': 'Report record not found or unauthorized.'}), 404
+
+    file_path = report.file_path
+    if not file_path or not os.path.exists(file_path):
+        # Fallback to look inside UPLOAD_FOLDER/reports
+        fallback = os.path.join(current_app.config['UPLOAD_FOLDER'], 'reports', os.path.basename(report.file_path or ''))
+        if os.path.exists(fallback):
+            file_path = fallback
+        else:
+            return jsonify({'status': 'error', 'message': 'Report file not found on disk.'}), 404
 
     as_attachment = request.args.get('attachment', 'true') == 'true'
     mimetype = 'application/pdf' if report.file_format == 'PDF' else 'text/csv'
+    download_filename = os.path.basename(file_path)
     
-    return send_file(
-        report.file_path,
+    response = send_file(
+        file_path,
         mimetype=mimetype,
         as_attachment=as_attachment,
-        download_name=os.path.basename(report.file_path)
+        download_name=download_filename
     )
+    response.headers['Access-Control-Expose-Headers'] = 'Content-Disposition'
+    return response

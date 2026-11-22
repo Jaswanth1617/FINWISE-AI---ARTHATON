@@ -16,7 +16,8 @@ import {
   Coins,
   Check,
   FileCheck2,
-  AlertTriangle
+  AlertTriangle,
+  ReceiptText
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -67,7 +68,7 @@ export default function LandingPage() {
         </h1>
 
         <p className="text-base sm:text-lg text-slate-600 max-w-2xl mb-10 leading-relaxed font-normal">
-          An end-to-end financial platform that extracts bank statements, flags suspicious phishing messages and URLs, models reducing-balance loan EMIs, compares Indian income tax regimes, and answers your financial questions with verified context.
+          An end-to-end financial intelligence platform that organizes cash flow transactions, flags suspicious phishing messages and URLs, models reducing-balance loan EMIs, compares Indian income tax regimes, and answers your financial questions with verified context.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-3 mb-16 w-full sm:w-auto">
@@ -107,11 +108,11 @@ export default function LandingPage() {
             {/* Feature 1 */}
             <div className="p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-xs transition-all">
               <div className="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
-                <FileCheck2 className="w-5 h-5" />
+                <ReceiptText className="w-5 h-5" />
               </div>
-              <h4 className="text-xs font-bold text-slate-900 mb-1">Native Statement Parsing</h4>
+              <h4 className="text-xs font-bold text-slate-900 mb-1">Smart Ledger & Categorization</h4>
               <p className="text-[11px] text-slate-500 leading-relaxed">
-                Ingest bank statements in PDF or CSV. Automatically normalizes descriptions, assigns 13 fintech categories, and deduplicates records.
+                Organize all financial activities. Automatically normalizes descriptions, assigns 13 fintech categories, and computes verified cash flow balances.
               </p>
             </div>
 
